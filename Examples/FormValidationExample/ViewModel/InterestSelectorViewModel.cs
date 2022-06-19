@@ -50,11 +50,7 @@ namespace FormValidationExample.ViewModel
 
         private void OnSelectedInterestsChanged()
         {
-            EventHandler handler = SelectedInterestsChanged;
-            if (handler != null)
-            {
-                handler(this, EventArgs.Empty);
-            }
+            SelectedInterestsChanged?.Invoke(this, EventArgs.Empty);
         }
 
         #endregion

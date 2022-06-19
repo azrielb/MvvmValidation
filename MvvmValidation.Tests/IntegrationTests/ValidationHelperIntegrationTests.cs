@@ -17,7 +17,7 @@ namespace MvvmValidation.Tests.IntegrationTests
         {
             TestUtils.ExecuteWithDispatcher((dispatcher, completedAction) =>
             {
-                var vm = new DummyViewModel {Foo = null};
+                var vm = new DummyViewModel { Foo = null };
 
                 var validation = new ValidationHelper();
 
@@ -43,7 +43,7 @@ namespace MvvmValidation.Tests.IntegrationTests
                     Assert.True(ruleExecuted,
                         "Validation rule must be executed before ValidationCompleted event is fired.");
 
-                    var isUiThread = dispatcher.Thread.ManagedThreadId == Thread.CurrentThread.ManagedThreadId;
+                    bool isUiThread = dispatcher.Thread.ManagedThreadId == Thread.CurrentThread.ManagedThreadId;
 
                     Assert.True(isUiThread, "ValidationResultChanged must be executed on UI thread");
                 };
@@ -52,7 +52,7 @@ namespace MvvmValidation.Tests.IntegrationTests
 
                 validation.ValidateAllAsync().ContinueWith(r =>
                 {
-                    var isUiThread = dispatcher.Thread.ManagedThreadId == Thread.CurrentThread.ManagedThreadId;
+                    bool isUiThread = dispatcher.Thread.ManagedThreadId == Thread.CurrentThread.ManagedThreadId;
 
                     Assert.True(isUiThread, "Validation callback must be executed on UI thread");
 
@@ -74,13 +74,10 @@ namespace MvvmValidation.Tests.IntegrationTests
         {
             TestUtils.ExecuteWithDispatcher((dispatcher, testCompleted) =>
             {
-                var vm = new DummyViewModel
-                {
+                var vm = new DummyViewModel {
                     Foo = "abc",
                     Bar = "abc"
                 };
-
-                Func<bool> validCondition = () => vm.Foo != vm.Bar;
 
                 var validation = new ValidationHelper();
 
@@ -90,7 +87,7 @@ namespace MvvmValidation.Tests.IntegrationTests
                     async () =>
                     {
                         return
-                            await Task.Run(() => RuleResult.Assert(validCondition(), "Foo must be different than bar"));
+                            await Task.Run(() => RuleResult.Assert(vm.Foo != vm.Bar, "Foo must be different than bar"));
                     });
 
                 validation.ValidateAsync(nameof(vm.Bar)).ContinueWith(r =>
@@ -108,8 +105,9 @@ namespace MvvmValidation.Tests.IntegrationTests
         {
             TestUtils.ExecuteWithDispatcher((dispatcher, completedAction) =>
             {
-                var vm = new DummyViewModel();
-                vm.Foo = null;
+                var vm = new DummyViewModel {
+                    Foo = null
+                };
 
                 var validation = new ValidationHelper();
 
@@ -214,8 +212,9 @@ namespace MvvmValidation.Tests.IntegrationTests
         {
             TestUtils.ExecuteWithDispatcher((dispatcher, completedAction) =>
             {
-                var vm = new DummyViewModel();
-                vm.Foo = null;
+                var vm = new DummyViewModel {
+                    Foo = null
+                };
 
                 var validation = new ValidationHelper();
 
@@ -237,18 +236,21 @@ namespace MvvmValidation.Tests.IntegrationTests
         }
 
         [Fact]
-        public void SyncValidation_CallResultsChangedOnUIThread() {
-            TestUtils.ExecuteWithDispatcher((uiThreadDispatcher, completedAction) => {
+        public void SyncValidation_CallResultsChangedOnUIThread()
+        {
+            TestUtils.ExecuteWithDispatcher((uiThreadDispatcher, completedAction) =>
+            {
                 var validation = new ValidationHelper();
 
                 validation.AddRule(() => RuleResult.Invalid("error"));
 
-                validation.ResultChanged += (o, e) => {
+                validation.ResultChanged += (o, e) =>
+                {
                     // VERIFY
-                    if (Thread.CurrentThread.ManagedThreadId != uiThreadDispatcher.Thread.ManagedThreadId) {
+                    if (Thread.CurrentThread.ManagedThreadId != uiThreadDispatcher.Thread.ManagedThreadId)
+                    {
                         Assert.True(false, "ValidationCompleted must be called on the UI thread.");
                     }
-                   
 
                     completedAction();
                 };
@@ -266,19 +268,19 @@ namespace MvvmValidation.Tests.IntegrationTests
                 int validationExecutionThreadID = -1;
                 bool validationRuleCalled = false;
 
-                var vm = new MockViewModel();
-
-                // When the rule gets executed verify that it gets executed in a background thread (doesn't block the UI)
-                vm.SyncValidationRuleExecutedAsyncroniouslyDelegate = () =>
-                {
-                    validationRuleCalled = true;
-                    validationExecutionThreadID = Thread.CurrentThread.ManagedThreadId;
-
-                    // VERIFY
-
-                    if (validationExecutionThreadID == uiThreadDispatcher.Thread.ManagedThreadId)
+                var vm = new MockViewModel {
+                    // When the rule gets executed verify that it gets executed in a background thread (doesn't block the UI)
+                    SyncValidationRuleExecutedAsyncroniouslyDelegate = () =>
                     {
-                        Assert.True(false, "Validation rule must be called on a different thread than UI thread.");
+                        validationRuleCalled = true;
+                        validationExecutionThreadID = Thread.CurrentThread.ManagedThreadId;
+
+                        // VERIFY
+
+                        if (validationExecutionThreadID == uiThreadDispatcher.Thread.ManagedThreadId)
+                        {
+                            Assert.True(false, "Validation rule must be called on a different thread than UI thread.");
+                        }
                     }
                 };
 
@@ -400,7 +402,7 @@ namespace MvvmValidation.Tests.IntegrationTests
                 // UI context.
                 Task.Factory.StartNew(() => { }).ContinueWith(t =>
                 {
-                    Task<ValidationResult> task = validation.ValidateAllAsync();
+                    var task = validation.ValidateAllAsync();
 
                     task.ContinueWith(result =>
                     {
@@ -428,7 +430,7 @@ namespace MvvmValidation.Tests.IntegrationTests
             {
                 const int numThreadsPerIternation = 4;
                 const int iterationCount = 10;
-                const int numThreads = numThreadsPerIternation*iterationCount;
+                const int numThreads = numThreadsPerIternation * iterationCount;
                 var resetEvent = new ManualResetEvent(false);
                 int toProcess = numThreads;
 
@@ -436,8 +438,8 @@ namespace MvvmValidation.Tests.IntegrationTests
 
                 for (int i = 0; i < iterationCount; i++)
                 {
-                    var target1 = new object();
-                    var target2 = new object();
+                    object target1 = new object();
+                    object target2 = new object();
 
                     validation.AddAsyncRule(() => { return Task.Run(() => RuleResult.Invalid("Error1")); });
 
@@ -447,28 +449,42 @@ namespace MvvmValidation.Tests.IntegrationTests
 
                     validation.AddRule(target2, RuleResult.Valid);
 
-                    Action<Action> testThreadBody = exercise =>
+                    void testThreadBody(Action exercise)
                     {
                         try
                         {
                             exercise();
 
                             if (Interlocked.Decrement(ref toProcess) == 0)
+                            {
                                 resetEvent.Set();
+                            }
                         }
                         catch (Exception ex)
                         {
                             dispatcher.BeginInvoke(new Action(() => { throw new AggregateException(ex); }));
                         }
-                    };
+                    }
 
-                    var thread1 = new Thread(() => { testThreadBody(() => { validation.ValidateAllAsync().Wait(); }); });
+                    var thread1 = new Thread(() =>
+                    {
+                        testThreadBody(() => { validation.ValidateAllAsync().Wait(); });
+                    });
 
-                    var thread2 = new Thread(() => { testThreadBody(() => { validation.ValidateAllAsync().Wait(); }); });
+                    var thread2 = new Thread(() =>
+                    {
+                        testThreadBody(() => { validation.ValidateAllAsync().Wait(); });
+                    });
 
-                    var thread3 = new Thread(() => { testThreadBody(() => { validation.Validate(target2); }); });
+                    var thread3 = new Thread(() =>
+                    {
+                        testThreadBody(() => { validation.Validate(target2); });
+                    });
 
-                    var thread4 = new Thread(() => { testThreadBody(() => { validation.Validate(target2); }); });
+                    var thread4 = new Thread(() =>
+                    {
+                        testThreadBody(() => { validation.Validate(target2); });
+                    });
 
                     thread1.Start();
                     thread2.Start();
@@ -789,7 +805,7 @@ namespace MvvmValidation.Tests.IntegrationTests
 
                 vm.ErrorsChanged += (o, e) =>
                 {
-                    var threadId = Thread.CurrentThread.ManagedThreadId;
+                    int threadId = Thread.CurrentThread.ManagedThreadId;
 
                     dispatcher.BeginInvoke(new Action(() =>
                     {

@@ -133,7 +133,7 @@ namespace FormValidationExample.ViewModel
             Validator.AddAsyncRule(nameof(UserName),
                 async () =>
                 {
-                    var isAvailable = await UserRegistrationService.IsUserNameAvailable(UserName).ToTask();
+                    bool isAvailable = await UserRegistrationService.IsUserNameAvailable(UserName).ToTask();
 
                     return RuleResult.Assert(isAvailable,
                         string.Format("User Name {0} is taken. Please choose a different one.", UserName));
@@ -161,9 +161,9 @@ namespace FormValidationExample.ViewModel
                     "Password must contain at least 6 characters"));
 
             Validator.AddRule(nameof(Password),
-                () => RuleResult.Assert((!Password.All(char.IsLower) &&
+                () => RuleResult.Assert(!Password.All(char.IsLower) &&
                                          !Password.All(char.IsUpper) &&
-                                         !Password.All(char.IsDigit)),
+                                         !Password.All(char.IsDigit),
                     "Password must contain both lower case and upper case letters"));
 
             Validator.AddRule(nameof(Password),
@@ -222,7 +222,7 @@ namespace FormValidationExample.ViewModel
         {
             if (!IsValid.GetValueOrDefault(true))
             {
-                ValidationResult validationResult = Validator.GetResult();
+                var validationResult = Validator.GetResult();
 
                 UpdateValidationSummary(validationResult);
             }

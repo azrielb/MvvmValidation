@@ -19,7 +19,7 @@ namespace MvvmValidation.Internal
         /// If <c>False</c> it will return only the last part, which is "NestedProperty" in the example above.</param>
         public static string For<T>(Expression<Func<T>> expression, bool compound = true)
         {
-            Expression body = expression.Body;
+            var body = expression.Body;
             return GetMemberName(body, compound);
         }
 
@@ -32,7 +32,7 @@ namespace MvvmValidation.Internal
         /// If <c>False</c> it will return only the last part, which is "NestedProperty" in the example above.</param>
         public static string For(Expression<Func<object>> expression, bool compound = true)
         {
-            Expression body = expression.Body;
+            var body = expression.Body;
             return GetMemberName(body, compound);
         }
 

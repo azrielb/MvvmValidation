@@ -81,7 +81,7 @@ namespace MvvmValidation
 
         private static ValidationResult CombineResults(IEnumerable<ValidationResult> results)
         {
-            ValidationResult result = ValidationResult.Valid;
+            var result = ValidationResult.Valid;
 
             foreach (var r in results)
             {

@@ -18,7 +18,7 @@ namespace MvvmValidation.Tests.Helpers
 
             // Set-up timer that will call Fail if the test is not completed in specified timeout
 
-            TimeSpan timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
+            var timeout = TimeSpan.FromMilliseconds(timeoutMilliseconds);
 
             if (Debugger.IsAttached)
             {
@@ -27,12 +27,17 @@ namespace MvvmValidation.Tests.Helpers
 
             Observable.Timer(timeout)
                 .Subscribe(
-                    _ => { uiThreadDispatcher.BeginInvoke(new Action(() => { Assert.True(false, timeoutMessage); })); });
-
+                    _ =>
+                    {
+                        uiThreadDispatcher.BeginInvoke(new Action(() => { Assert.True(false, timeoutMessage); }));
+                    });
 
             // Shedule the test body with current dispatcher (UI thread)
             uiThreadDispatcher.BeginInvoke(
-                new Action(() => { testBodyDelegate(uiThreadDispatcher, () => { frame.Continue = false; }); }));
+                new Action(() =>
+                {
+                    testBodyDelegate(uiThreadDispatcher, () => { frame.Continue = false; });
+                }));
 
             // Run the dispatcher loop that will execute the above logic
             Dispatcher.PushFrame(frame);

@@ -64,12 +64,12 @@ namespace MvvmValidation
         /// The <see cref="AddError"/> method can be used to add errors to the result later.
         /// </summary>
         public RuleResult()
-            : this(true, new string[] {})
+            : this(true, new string[] { })
         {
         }
 
         private RuleResult(string error)
-            : this(false, new[] {error})
+            : this(false, new[] { error })
         {
             Guard.NotNullOrEmpty(error, nameof(error));
         }
@@ -92,7 +92,13 @@ namespace MvvmValidation
         /// Gets the error messages in case if the target is invalid according to this validation rule.
         /// </summary>
         [NotNull]
-        public IEnumerable<string> Errors => errors;
+        public IEnumerable<string> Errors
+        {
+            get
+            {
+                return errors;
+            }
+        }
 
         /// <summary>
         /// Adds an error to the result.
@@ -119,7 +125,7 @@ namespace MvvmValidation
         /// </returns>
         public bool Equals(RuleResult other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
             {
                 return false;
             }
@@ -133,15 +139,15 @@ namespace MvvmValidation
         #endregion
 
         /// <summary>
-        /// Determines whether the specified <see cref="System.Object"/> is equal to this instance.
+        /// Determines whether the specified <see cref="object"/> is equal to this instance.
         /// </summary>
-        /// <param name="obj">The <see cref="System.Object"/> to compare with this instance.</param>
+        /// <param name="obj">The <see cref="object"/> to compare with this instance.</param>
         /// <returns>
-        ///   <c>true</c> if the specified <see cref="System.Object"/> is equal to this instance; otherwise, <c>false</c>.
+        ///   <c>true</c> if the specified <see cref="object"/> is equal to this instance; otherwise, <c>false</c>.
         /// </returns>
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
@@ -166,7 +172,7 @@ namespace MvvmValidation
         {
             unchecked
             {
-                return ((errors?.GetHashCode() ?? 0)*397) ^ IsValid.GetHashCode();
+                return ((errors?.GetHashCode() ?? 0) * 397) ^ IsValid.GetHashCode();
             }
         }
 

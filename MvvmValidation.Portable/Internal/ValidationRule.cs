@@ -36,7 +36,7 @@ namespace MvvmValidation.Internal
                     "Synchronous validation is not supported by this rule. Method EvaluateAsync must be called instead.");
             }
 
-            RuleResult result = ValidateDelegate();
+            var result = ValidateDelegate();
 
             return result;
         }

@@ -26,7 +26,7 @@ namespace MvvmValidation
                 return string.Empty;
             }
 
-            var distinctErrorMessages = validationResult.ErrorList.Select(e => e.ErrorText).Distinct().ToArray();
+            string[] distinctErrorMessages = validationResult.ErrorList.Select(e => e.ErrorText).Distinct().ToArray();
 
             if (distinctErrorMessages.Length == 1)
             {

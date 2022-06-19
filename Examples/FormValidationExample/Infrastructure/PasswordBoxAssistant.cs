@@ -31,7 +31,7 @@ namespace FormValidationExample.Infrastructure
             // avoid recursive updating by ignoring the box's changed event
             box.PasswordChanged -= HandlePasswordChanged;
 
-            var newPassword = (string) e.NewValue;
+            string newPassword = (string) e.NewValue;
 
             if (!GetUpdatingPassword(box))
             {
@@ -53,8 +53,8 @@ namespace FormValidationExample.Infrastructure
                 return;
             }
 
-            var wasBound = (bool) (e.OldValue);
-            var needToBind = (bool) (e.NewValue);
+            bool wasBound = (bool) e.OldValue;
+            bool needToBind = (bool) e.NewValue;
 
             if (wasBound)
             {

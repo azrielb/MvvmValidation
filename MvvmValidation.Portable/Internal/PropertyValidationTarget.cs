@@ -18,7 +18,7 @@ namespace MvvmValidation.Internal
 
         public bool Equals(PropertyValidationTarget other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
             {
                 return false;
             }
@@ -35,7 +35,7 @@ namespace MvvmValidation.Internal
 
         public IEnumerable<object> UnwrapTargets()
         {
-            return new[] {PropertyName};
+            return new[] { PropertyName };
         }
 
         public bool IsMatch(object target)
@@ -47,7 +47,7 @@ namespace MvvmValidation.Internal
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
@@ -66,7 +66,7 @@ namespace MvvmValidation.Internal
         {
             unchecked
             {
-                return (PropertyName != null ? PropertyName.GetHashCode() : 0);
+                return PropertyName != null ? PropertyName.GetHashCode() : 0;
             }
         }
     }

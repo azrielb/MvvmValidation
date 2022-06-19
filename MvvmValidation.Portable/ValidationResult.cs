@@ -25,7 +25,13 @@ namespace MvvmValidation
             ErrorList = errors;
         }
 
-        internal static ValidationResult Valid => new ValidationResult();
+        internal static ValidationResult Valid
+        {
+            get
+            {
+                return new ValidationResult();
+            }
+        }
 
         /// <summary>
         /// Gets the list of errors if any. If valid, returns an empty collection.
@@ -36,7 +42,13 @@ namespace MvvmValidation
         /// <summary>
         /// Gets a value indicating whether the validation was sucessful. If not, see <see cref="ErrorList"/> for the list of errors.
         /// </summary>
-        public bool IsValid => !ErrorList.Any();
+        public bool IsValid
+        {
+            get
+            {
+                return !ErrorList.Any();
+            }
+        }
 
         /// <summary>
         /// Gets an error by <paramref name="target"/>, or <c>null</c> if valid.
@@ -46,7 +58,7 @@ namespace MvvmValidation
         {
             get
             {
-                ValidationError firstErrorForTarget = ErrorList.FirstOrDefault(e => e.Target == target);
+                var firstErrorForTarget = ErrorList.FirstOrDefault(e => e.Target == target);
 
                 return firstErrorForTarget?.ErrorText;
             }
@@ -82,14 +94,14 @@ namespace MvvmValidation
         }
 
         /// <summary>
-        /// Returns a <see cref="System.String"/> that represents this instance.
+        /// Returns a <see cref="string"/> that represents this instance.
         /// </summary>
         /// <returns>
-        /// A <see cref="System.String"/> that represents this instance.
+        /// A <see cref="string"/> that represents this instance.
         /// </returns>
         public override string ToString()
         {
-            var result = ToString(new NumberedListValidationResultFormatter());
+            string result = ToString(new NumberedListValidationResultFormatter());
 
             return result;
         }

@@ -25,7 +25,7 @@ namespace MvvmValidation.Internal
             [CallerFilePath] string callerFilePath = null,
             [CallerLineNumber] int callerLineNumber = 0)
         {
-            if (ReferenceEquals(value, null))
+            if (value == null)
             {
                 string argumentNullMessage = $"Value of argument \"{paramName}\" cannot be null.";
                 string message = FormatMessageWithCollerInfo(argumentNullMessage, callerMemberName, callerFilePath,
@@ -109,21 +109,19 @@ namespace MvvmValidation.Internal
                 return message;
             }
 
-            string result = message;
-
-            result = result + " [Member Name: ";
+            string result = message + " [Member Name: ";
 
             if (!string.IsNullOrEmpty(callerMemberName))
             {
-                result = result + callerMemberName;
+                result += callerMemberName;
             }
 
             if (!string.IsNullOrEmpty(callerFilePath))
             {
-                result = result + " at " + callerFilePath + " Line: " + callerLineNumber;
+                result = $"{result} at {callerFilePath} Line: {callerLineNumber}";
             }
 
-            result = result + "]";
+            result += "]";
 
             return result;
         }

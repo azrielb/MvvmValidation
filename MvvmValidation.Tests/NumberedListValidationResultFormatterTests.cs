@@ -14,10 +14,10 @@ namespace MvvmValidation.Tests
             validationResult.AddError("target2", validationResult.ErrorList[0].ErrorText);
 
             var formatter = new NumberedListValidationResultFormatter();
-            var expectedFormattedString = validationResult.ErrorList[0].ErrorText;
+            string expectedFormattedString = validationResult.ErrorList[0].ErrorText;
 
             // ACT
-            var actualFormattedString = formatter.Format(validationResult);
+            string actualFormattedString = formatter.Format(validationResult);
 
             // VERIFY
             Assert.Equal(expectedFormattedString, actualFormattedString);

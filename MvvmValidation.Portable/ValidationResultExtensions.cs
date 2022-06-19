@@ -24,12 +24,12 @@ namespace MvvmValidation
 
             var result = new ValidationResult();
 
-            foreach (ValidationError error in firstResult.ErrorList)
+            foreach (var error in firstResult.ErrorList)
             {
                 result.AddError(error.Target, error.ErrorText);
             }
 
-            foreach (ValidationError error in secondResult.ErrorList)
+            foreach (var error in secondResult.ErrorList)
             {
                 if (result.ErrorList.Contains(error))
                 {

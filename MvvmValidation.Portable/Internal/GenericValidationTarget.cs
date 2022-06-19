@@ -18,7 +18,7 @@ namespace MvvmValidation.Internal
 
         public bool Equals(GenericValidationTarget other)
         {
-            if (ReferenceEquals(null, other))
+            if (other is null)
             {
                 return false;
             }
@@ -35,7 +35,7 @@ namespace MvvmValidation.Internal
 
         public IEnumerable<object> UnwrapTargets()
         {
-            return new[] {TargetId};
+            return new[] { TargetId };
         }
 
         public bool IsMatch(object target)
@@ -47,7 +47,7 @@ namespace MvvmValidation.Internal
 
         public override bool Equals(object obj)
         {
-            if (ReferenceEquals(null, obj))
+            if (obj is null)
             {
                 return false;
             }
@@ -64,7 +64,7 @@ namespace MvvmValidation.Internal
 
         public override int GetHashCode()
         {
-            return (TargetId != null ? TargetId.GetHashCode() : 0);
+            return TargetId != null ? TargetId.GetHashCode() : 0;
         }
     }
 }

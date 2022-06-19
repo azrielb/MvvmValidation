@@ -37,7 +37,7 @@ namespace MvvmValidation.Internal
                 return UnwrapExceptions(exception.InnerException);
             }
 
-            return new[] {exception};
+            return new[] { exception };
         }
 
         public static Exception UnwrapException(Exception exception)

@@ -1,9 +1,11 @@
-﻿using JetBrains.Annotations;
+﻿using System.Diagnostics.CodeAnalysis;
+using JetBrains.Annotations;
 
 namespace MvvmValidation.Internal
 {
     // ReSharper disable InconsistentNaming
     [UsedImplicitly]
+    [SuppressMessage("Style", "IDE1006:Naming Styles", Justification = "Don't change API")]
     internal static class GuardReSharperTemplates
     {
         [SourceTemplate]

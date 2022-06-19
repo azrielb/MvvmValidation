@@ -15,7 +15,7 @@ namespace FormValidationExample
         {
             base.OnStartup(e);
 
-            this.DispatcherUnhandledException += OnUnhandledException;
+            DispatcherUnhandledException += OnUnhandledException;
         }
 
         private void OnUnhandledException(object sender, DispatcherUnhandledExceptionEventArgs e)

@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace MvvmValidation.Internal
 {
@@ -16,7 +12,13 @@ namespace MvvmValidation.Internal
             this.defaultValue = defaultValue;
         }
 
-        public bool Value => refCount > 0 ? !defaultValue : defaultValue;
+        public bool Value
+        {
+            get
+            {
+                return refCount > 0 ? !defaultValue : defaultValue;
+            }
+        }
 
         public IDisposable Toggle()
         {

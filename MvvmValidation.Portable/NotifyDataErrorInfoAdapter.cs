@@ -22,7 +22,7 @@ namespace MvvmValidation
         /// <param name="validator">The adaptee.</param>
         public NotifyDataErrorInfoAdapter([NotNull] ValidationHelper validator)
             : this(validator, SynchronizationContext.Current)
-        {            
+        {
         }
 
         /// <summary>
@@ -44,7 +44,8 @@ namespace MvvmValidation
         {
             if (errorsChangedNotificationContext != null)
             {
-                errorsChangedNotificationContext.Post(_ => {
+                errorsChangedNotificationContext.Post(_ =>
+                {
                     OnErrorsChanged(e.Target as string);
                 }, null);
 
@@ -70,14 +71,20 @@ namespace MvvmValidation
             var validationResult = Validator.GetResult(propertyName);
 
             // Return all the errors as a single string because most UI implementations display only first error
-            return validationResult.IsValid ? Enumerable.Empty<string>() : new[] {validationResult.ToString()};
+            return validationResult.IsValid ? Enumerable.Empty<string>() : new[] { validationResult.ToString() };
         }
 
         /// <summary>
         /// Gets a value that indicates whether the object has validation errors.
         /// </summary>
         /// <returns>true if the object currently has validation errors; otherwise, false.</returns>
-        public bool HasErrors => !Validator.GetResult().IsValid;
+        public bool HasErrors
+        {
+            get
+            {
+                return !Validator.GetResult().IsValid;
+            }
+        }
 
         /// <summary>
         /// Occurs when the validation errors have changed for a property or for the entire object.
@@ -95,24 +102,24 @@ namespace MvvmValidation
         protected virtual void Dispose(bool disposing)
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
-          if (!isDisposed)
-          {
-            if (disposing)
+            if (!isDisposed)
             {
-                Validator.ResultChanged -= OnValidatorResultChanged;
-            }
+                if (disposing)
+                {
+                    Validator.ResultChanged -= OnValidatorResultChanged;
+                }
 
-            isDisposed = true;
-          }
+                isDisposed = true;
+            }
         }
 
 #pragma warning disable CS1591 // Missing XML comment for publicly visible type or member
         public void Dispose()
 #pragma warning restore CS1591 // Missing XML comment for publicly visible type or member
         {
-          // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
-          Dispose(disposing: true);
-          GC.SuppressFinalize(this);
+            // Do not change this code. Put cleanup code in 'Dispose(bool disposing)' method
+            Dispose(disposing: true);
+            GC.SuppressFinalize(this);
         }
-  }
+    }
 }

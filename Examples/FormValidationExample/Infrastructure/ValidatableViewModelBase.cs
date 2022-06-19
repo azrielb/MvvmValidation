@@ -39,7 +39,13 @@ namespace FormValidationExample.Infrastructure
             return NotifyDataErrorInfoAdapter.GetErrors(propertyName);
         }
 
-        public bool HasErrors => NotifyDataErrorInfoAdapter.HasErrors;
+        public bool HasErrors
+        {
+            get
+            {
+                return NotifyDataErrorInfoAdapter.HasErrors;
+            }
+        }
 
         public event EventHandler<DataErrorsChangedEventArgs> ErrorsChanged
         {

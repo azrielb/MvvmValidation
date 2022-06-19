@@ -1,7 +1,6 @@
 using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
-using System.Diagnostics.CodeAnalysis;
 using System.Globalization;
 using System.Linq;
 using System.Linq.Expressions;
@@ -62,7 +61,13 @@ namespace MvvmValidation
         /// <summary>
         /// Indicates whether the validation is currently suspended using the <see cref="SuppressValidation"/> method.
         /// </summary>
-        public bool IsValidationSuspended => suppressToggle.Value;
+        public bool IsValidationSuspended
+        {
+            get
+            {
+                return suppressToggle.Value;
+            }
+        }
 
         #endregion
 
@@ -129,7 +134,7 @@ namespace MvvmValidation
             Guard.NotNull(targetName, nameof(targetName));
             Guard.NotNull(validateDelegate, nameof(validateDelegate));
 
-            var rule = AddRule(new[] {targetName}, validateDelegate);
+            var rule = AddRule(new[] { targetName }, validateDelegate);
 
             return rule;
         }
@@ -172,7 +177,7 @@ namespace MvvmValidation
             Guard.NotNull(property2Name, nameof(property2Name));
             Guard.NotNull(validateDelegate, nameof(validateDelegate));
 
-            var rule = AddRule(new[] {property1Name, property2Name}, validateDelegate);
+            var rule = AddRule(new[] { property1Name, property2Name }, validateDelegate);
 
             return rule;
         }
@@ -211,7 +216,7 @@ namespace MvvmValidation
             Guard.Assert(properties.Any(), "properties.Any()");
             Guard.NotNull(validateDelegate, nameof(validateDelegate));
 
-            IValidationTarget target = CreatePropertyValidationTarget(properties);
+            var target = CreatePropertyValidationTarget(properties);
 
             var rule = AddRuleCore(target, validateDelegate, null);
 
@@ -291,7 +296,7 @@ namespace MvvmValidation
             Guard.NotNull(propertyName, nameof(propertyName));
             Guard.NotNull(validateAction, nameof(validateAction));
 
-            var rule = AddAsyncRule(new[] {propertyName}.Select(c => c), validateAction);
+            var rule = AddAsyncRule(new[] { propertyName }.Select(c => c), validateAction);
 
             return rule;
         }
@@ -336,7 +341,7 @@ namespace MvvmValidation
             Guard.NotNull(property2Name, nameof(property2Name));
             Guard.NotNull(validateAction, nameof(validateAction));
 
-            var rule = AddAsyncRule(new[] {property1Name, property2Name}, validateAction);
+            var rule = AddAsyncRule(new[] { property1Name, property2Name }, validateAction);
 
             return rule;
         }
@@ -370,7 +375,7 @@ namespace MvvmValidation
             Guard.Assert(properties.Any(), "properties.Any()");
             Guard.NotNull(validateAction, nameof(validateAction));
 
-            IValidationTarget target = CreatePropertyValidationTarget(properties);
+            var target = CreatePropertyValidationTarget(properties);
 
             var rule = AddRuleCore(target, null, validateAction);
 
@@ -448,7 +453,7 @@ namespace MvvmValidation
                 }
 
                 // Notify that validation result has changed
-                foreach (var target in targets)
+                foreach (object target in targets)
                 {
                     NotifyResultChanged(target, ValidationResult.Valid, null, false);
                 }
@@ -533,7 +538,7 @@ namespace MvvmValidation
 
             bool returnAllResults = string.IsNullOrEmpty(target as string);
 
-            ValidationResult result = returnAllResults ? GetResultInternal() : GetResultInternal(target);
+            var result = returnAllResults ? GetResultInternal() : GetResultInternal(target);
 
             return result;
         }
@@ -566,13 +571,12 @@ namespace MvvmValidation
 
         private ValidationResult GetResultInternal(object target)
         {
-            ValidationResult result = ValidationResult.Valid;
+            var result = ValidationResult.Valid;
 
             lock (ruleValidationResultMap)
             {
-                IDictionary<ValidationRule, RuleResult> ruleResultMap;
 
-                if (ruleValidationResultMap.TryGetValue(target, out ruleResultMap))
+                if (ruleValidationResultMap.TryGetValue(target, out var ruleResultMap))
                 {
                     foreach (var ruleValidationResult in ruleResultMap.Values)
                     {
@@ -586,13 +590,13 @@ namespace MvvmValidation
 
         private ValidationResult GetResultInternal()
         {
-            ValidationResult result = ValidationResult.Valid;
+            var result = ValidationResult.Valid;
 
             lock (ruleValidationResultMap)
             {
                 foreach (var ruleResultsMapPair in ruleValidationResultMap)
                 {
-                    var ruleTarget = ruleResultsMapPair.Key;
+                    object ruleTarget = ruleResultsMapPair.Key;
                     var ruleResultsMap = ruleResultsMapPair.Value;
 
                     foreach (var validationResult in ruleResultsMap.Values)
@@ -693,7 +697,7 @@ namespace MvvmValidation
 
             try
             {
-                ValidationResult validationResult = ExecuteValidationRulesAsync(rulesToExecute).Result;
+                var validationResult = ExecuteValidationRulesAsync(rulesToExecute).Result;
                 return validationResult;
             }
             catch (Exception ex)
@@ -711,7 +715,7 @@ namespace MvvmValidation
 
             foreach (var rule in rulesToExecute.ToArray())
             {
-                var isValid = await ExecuteRuleAsync(rule, failedTargets, result, syncContext).ConfigureAwait(false);
+                bool isValid = await ExecuteRuleAsync(rule, failedTargets, result, syncContext).ConfigureAwait(false);
 
                 if (!isValid)
                 {
@@ -752,7 +756,7 @@ namespace MvvmValidation
 
         private bool ShouldExecuteOnAlreadyInvalidTarget(ValidationRule rule)
         {
-            var defaultValue = Settings.DefaultRuleSettings?.ExecuteOnAlreadyInvalidTarget ?? false;
+            bool defaultValue = Settings.DefaultRuleSettings?.ExecuteOnAlreadyInvalidTarget ?? false;
 
             return rule.Settings.ExecuteOnAlreadyInvalidTarget.GetValueOrDefault(defaultValue);
         }
@@ -761,7 +765,7 @@ namespace MvvmValidation
         {
             lock (syncRoot)
             {
-                Func<ValidationRule, bool> ruleFilter = CreateRuleFilterFor(target);
+                var ruleFilter = CreateRuleFilterFor(target);
 
                 var result = new ReadOnlyCollection<ValidationRule>(ValidationRules.Where(ruleFilter).ToList());
 
@@ -774,7 +778,7 @@ namespace MvvmValidation
         {
             if (!ruleResult.IsValid)
             {
-                IEnumerable<object> errorTargets = validationRule.Target.UnwrapTargets();
+                var errorTargets = validationRule.Target.UnwrapTargets();
 
                 foreach (object errorTarget in errorTargets)
                 {
@@ -803,13 +807,13 @@ namespace MvvmValidation
         {
             lock (syncRoot)
             {
-                IEnumerable<object> ruleTargets = rule.Target.UnwrapTargets();
+                var ruleTargets = rule.Target.UnwrapTargets();
 
                 foreach (object ruleTarget in ruleTargets)
                 {
-                    IDictionary<ValidationRule, RuleResult> targetRuleMap = GetRuleMapForTarget(ruleTarget);
+                    var targetRuleMap = GetRuleMapForTarget(ruleTarget);
 
-                    RuleResult currentRuleResult = GetCurrentValidationResultForRule(targetRuleMap, rule);
+                    var currentRuleResult = GetCurrentValidationResultForRule(targetRuleMap, rule);
 
                     if (!Equals(currentRuleResult, ruleResult))
                     {
@@ -848,7 +852,7 @@ namespace MvvmValidation
                     ruleValidationResultMap.Add(target, new Dictionary<ValidationRule, RuleResult>());
                 }
 
-                IDictionary<ValidationRule, RuleResult> ruleMap = ruleValidationResultMap[target];
+                var ruleMap = ruleValidationResultMap[target];
 
                 return ruleMap;
             }
@@ -1001,9 +1005,9 @@ namespace MvvmValidation
             {
                 lock (ruleValidationResultMap)
                 {
-                    var targets = ruleValidationResultMap.Keys.ToArray();
+                    object[] targets = ruleValidationResultMap.Keys.ToArray();
 
-                    foreach (var target in targets)
+                    foreach (object target in targets)
                     {
                         var resultForTarget = GetResultInternal(target);
 

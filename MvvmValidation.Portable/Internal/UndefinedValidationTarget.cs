@@ -10,12 +10,12 @@ namespace MvvmValidation.Internal
 
         public IEnumerable<object> UnwrapTargets()
         {
-            return new[] {FakeTarget};
+            return new[] { FakeTarget };
         }
 
         public bool IsMatch(object target)
         {
-            return ReferenceEquals(target, null);
+            return target is null;
         }
 
         #endregion

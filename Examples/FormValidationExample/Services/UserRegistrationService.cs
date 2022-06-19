@@ -11,9 +11,8 @@ namespace FormValidationExample.Services
 
         public IObservable<bool> IsUserNameAvailable(string userName)
         {
-            bool isNameAvailable;
 
-            if (!resultCache.TryGetValue(userName, out isNameAvailable))
+            if (!resultCache.TryGetValue(userName, out bool isNameAvailable))
             {
                 isNameAvailable = lastResult = !lastResult;
                 resultCache.Add(userName, isNameAvailable);

@@ -29,13 +29,13 @@ namespace MvvmValidation
             Guard.NotNull(propertyExpression, nameof(propertyExpression));
             Guard.NotNullOrEmpty(errorMessage, nameof(errorMessage));
 
-            Func<object> propertyGetter = propertyExpression.Compile();
+            var propertyGetter = propertyExpression.Compile();
 
             return validator.AddRule(PropertyName.For(propertyExpression, false), () =>
             {
                 object propertyValue = propertyGetter();
 
-                var stringPropertyValue = propertyValue as string;
+                string stringPropertyValue = propertyValue as string;
 
                 if (propertyValue == null || (stringPropertyValue != null && string.IsNullOrEmpty(stringPropertyValue)))
                 {
@@ -60,21 +60,21 @@ namespace MvvmValidation
             Guard.NotNull(validator, nameof(validator));
             Guard.NotNull(childValidatableGetter, nameof(childValidatableGetter));
 
-            Func<IValidatable> getter = childValidatableGetter.Compile();
+            var getter = childValidatableGetter.Compile();
 
             return validator.AddAsyncRule(PropertyName.For(childValidatableGetter), () =>
             {
-                IValidatable validatable = getter();
+                var validatable = getter();
 
                 if (validatable != null)
                 {
                     return validatable.Validate().ContinueWith(r =>
                     {
-                        ValidationResult result = r.Result;
+                        var result = r.Result;
 
                         var ruleResult = new RuleResult();
 
-                        foreach (ValidationError error in result.ErrorList)
+                        foreach (var error in result.ErrorList)
                         {
                             ruleResult.AddError(error.ErrorText);
                         }
@@ -101,11 +101,11 @@ namespace MvvmValidation
             Guard.NotNull(validator, nameof(validator));
             Guard.NotNull(validatableCollectionGetter, nameof(validatableCollectionGetter));
 
-            Func<IEnumerable<IValidatable>> getter = validatableCollectionGetter.Compile();
+            var getter = validatableCollectionGetter.Compile();
 
             return validator.AddAsyncRule(PropertyName.For(validatableCollectionGetter), () =>
             {
-                IEnumerable<IValidatable> items = getter();
+                var items = getter();
 
                 if (items == null)
                 {
@@ -132,8 +132,8 @@ namespace MvvmValidation
                 {
                     var task = item.Validate().ContinueWith(tr =>
                     {
-                        ValidationResult r = tr.Result;
-                        AggregateException ex = tr.Exception;
+                        var r = tr.Result;
+                        var ex = tr.Exception;
 
                         lock (results)
                         {
@@ -154,9 +154,9 @@ namespace MvvmValidation
                     if (tr.Exception == null)
                     {
                         // Add errors from all validation results
-                        foreach (ValidationResult itemResult in results)
+                        foreach (var itemResult in results)
                         {
-                            foreach (ValidationError error in itemResult.ErrorList)
+                            foreach (var error in itemResult.ErrorList)
                             {
                                 result.AddError(error.ErrorText);
                             }
