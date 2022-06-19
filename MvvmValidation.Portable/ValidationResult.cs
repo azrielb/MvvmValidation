@@ -71,9 +71,9 @@ namespace MvvmValidation
             ErrorList.Add(error);
         }
 
-        internal void AddError(object target, string error)
+        internal void AddError(object target, string error, RuleResult ruleResult = null)
         {
-            AddError(new ValidationError(error, target));
+            AddError(new ValidationError(error, target, ruleResult));
         }
 
         /// <summary>

@@ -9,13 +9,14 @@ namespace MvvmValidation
     /// </summary>
     public class ValidationError : IEquatable<ValidationError>
     {
-        internal ValidationError([NotNull] string errorText, [NotNull] object target)
+        internal ValidationError([NotNull] string errorText, [NotNull] object target, [CanBeNull] RuleResult ruleResult = null)
         {
             Guard.NotNullOrEmpty(errorText, nameof(errorText));
             Guard.NotNull(target, nameof(target));
 
             ErrorText = errorText;
             Target = target;
+            RuleResult = ruleResult;
         }
 
         /// <summary>
@@ -29,6 +30,12 @@ namespace MvvmValidation
         /// </summary>
         [NotNull]
         public object Target { get; }
+
+        /// <summary>
+        /// Gets the all information about the error.
+        /// </summary>
+        [CanBeNull]
+        public RuleResult RuleResult { get; }
 
         #region IEquatable<ValidationError> Members
 

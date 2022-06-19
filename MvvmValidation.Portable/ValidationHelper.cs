@@ -784,7 +784,7 @@ namespace MvvmValidation
                 {
                     foreach (string ruleError in ruleResult.Errors)
                     {
-                        resultToAddTo.AddError(errorTarget, ruleError);
+                        resultToAddTo.AddError(errorTarget, ruleError, ruleResult);
                     }
                 }
             }
