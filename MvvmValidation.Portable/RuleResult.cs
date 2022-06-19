@@ -86,7 +86,7 @@ namespace MvvmValidation
         /// <summary>
         /// Gets a value indicating whether the validation rule passed (valid).
         /// </summary>
-        public bool IsValid { get; protected set; }
+        public bool IsValid { get; private set; }
 
         /// <summary>
         /// Gets the error messages in case if the target is invalid according to this validation rule.
