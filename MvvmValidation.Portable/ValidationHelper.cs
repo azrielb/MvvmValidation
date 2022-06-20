@@ -580,7 +580,7 @@ namespace MvvmValidation
                 {
                     foreach (var ruleValidationResult in ruleResultMap.Values)
                     {
-                        result = result.Combine(new ValidationResult(target, ruleValidationResult.Errors));
+                        result = result.Combine(new ValidationResult(target, ruleValidationResult));
                     }
                 }
             }
@@ -601,7 +601,7 @@ namespace MvvmValidation
 
                     foreach (var validationResult in ruleResultsMap.Values)
                     {
-                        result = result.Combine(new ValidationResult(ruleTarget, validationResult.Errors));
+                        result = result.Combine(new ValidationResult(ruleTarget, validationResult));
                     }
                 }
             }

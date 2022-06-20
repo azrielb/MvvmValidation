@@ -9,10 +9,11 @@ namespace MvvmValidation
     /// </summary>
     public class ValidationError : IEquatable<ValidationError>
     {
-        internal ValidationError([NotNull] string errorText, [NotNull] object target, [CanBeNull] RuleResult ruleResult = null)
+        internal ValidationError([NotNull] string errorText, [NotNull] object target, [NotNull] RuleResult ruleResult)
         {
             Guard.NotNullOrEmpty(errorText, nameof(errorText));
             Guard.NotNull(target, nameof(target));
+            Guard.NotNull(ruleResult, nameof(ruleResult));
 
             ErrorText = errorText;
             Target = target;

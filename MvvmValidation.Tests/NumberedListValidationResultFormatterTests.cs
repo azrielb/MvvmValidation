@@ -10,8 +10,8 @@ namespace MvvmValidation.Tests
         {
             // ARRANGE
             var validationResult = new ValidationResult();
-            validationResult.AddError("target1", "Error1");
-            validationResult.AddError("target2", validationResult.ErrorList[0].ErrorText);
+            validationResult.AddError("target1", "Error1", null);
+            validationResult.AddError("target2", validationResult.ErrorList[0].ErrorText, null);
 
             var formatter = new NumberedListValidationResultFormatter();
             string expectedFormattedString = validationResult.ErrorList[0].ErrorText;

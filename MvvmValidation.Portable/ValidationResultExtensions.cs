@@ -26,7 +26,7 @@ namespace MvvmValidation
 
             foreach (var error in firstResult.ErrorList)
             {
-                result.AddError(error.Target, error.ErrorText);
+                result.AddError(error.Target, error.ErrorText, error.RuleResult);
             }
 
             foreach (var error in secondResult.ErrorList)
@@ -36,7 +36,7 @@ namespace MvvmValidation
                     continue;
                 }
 
-                result.AddError(error.Target, error.ErrorText);
+                result.AddError(error.Target, error.ErrorText, error.RuleResult);
             }
 
             return result;

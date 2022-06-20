@@ -1,5 +1,4 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using System.Linq;
 using JetBrains.Annotations;
 using MvvmValidation.Internal;
 
@@ -15,8 +14,8 @@ namespace MvvmValidation
         {
         }
 
-        internal ValidationResult(object target, IEnumerable<string> errors)
-            : this(new ValidationErrorCollection(errors.Select(e => new ValidationError(e, target)).ToList()))
+        internal ValidationResult(object target, RuleResult ruleResult)
+            : this(new ValidationErrorCollection(ruleResult.Errors.Select(e => new ValidationError(e, target, ruleResult)).ToList()))
         {
         }
 
@@ -71,7 +70,7 @@ namespace MvvmValidation
             ErrorList.Add(error);
         }
 
-        internal void AddError(object target, string error, RuleResult ruleResult = null)
+        internal void AddError(object target, string error, RuleResult ruleResult)
         {
             AddError(new ValidationError(error, target, ruleResult));
         }
